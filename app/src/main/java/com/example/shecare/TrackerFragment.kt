@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.DatePicker
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import java.time.LocalDate
@@ -28,10 +30,14 @@ class TrackerFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    private lateinit var textView: TextView
+    private lateinit var phasetext: TextView
     lateinit var year:String
     lateinit var month:String
     lateinit var day:String
+    private lateinit var dayscount: TextView
+    private lateinit var calenderbtn: ImageView
+    private lateinit var calenderredirect: DatePicker
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -51,18 +57,68 @@ class TrackerFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        textView=view.findViewById(R.id.Text)
-        textView.text="HELLO"
+
+        dayscount=view.findViewById(R.id.DaysCount)
+        phasetext=view.findViewById(R.id.phase)
+        calenderbtn=view.findViewById(R.id.Cal)
+        calenderredirect=view.findViewById((R.id.CalRedirect))
+        calenderredirect.visibility=View.GONE
         year= (activity as ActionActivity).year
         month = (activity as ActionActivity).month
         day=(activity as ActionActivity).day
+        var diff= getdifference()
+
+        dayscount.text=diff.toString()
+        updatephase(diff)
+        calenderbtn.setOnClickListener {
+
+            if (calenderredirect.visibility == View.GONE) {
+                dayscount.visibility = View.GONE
+                phasetext.visibility = View.GONE
+                calenderredirect.visibility = View.VISIBLE
+
+                calenderredirect.init(year.toInt(), month.toInt(), day.toInt()) { view, y, m, d ->
+                    year = y.toString()
+                    month = (m + 1).toString()
+                    day = d.toString()
+                    diff=getdifference()
+                    dayscount.text=diff.toString()
+                    updatephase(diff)
+                }
+            }
+
+                else{
+                    dayscount.visibility = View.VISIBLE
+                    phasetext.visibility = View.VISIBLE
+                    calenderredirect.visibility = View.GONE
+                }
+
+            }
+
+
+
+
+
+
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    public fun getdifference():Int{
         val mDate1=LocalDate.of(year.toInt(),month.toInt(),day.toInt())
         val mDate2= LocalDate.now()
 
         val period=Period.between(mDate1,mDate2)
-        textView.text=period.days.toString()
+        return period.days
     }
-
+    public fun updatephase(diff:Int){
+        if (diff<=5)
+            phasetext.text="Menstruation"
+        else if (diff>5 && diff<=13)
+            phasetext.text="Follicular Phase"
+        else if(diff>13 && diff<=15)
+            phasetext.text="Ovulation Phase"
+        else
+            phasetext.text="Luteal Phase"
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of

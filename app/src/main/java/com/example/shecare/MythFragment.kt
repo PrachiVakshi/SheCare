@@ -1,10 +1,12 @@
 package com.example.shecare
 
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,6 +22,10 @@ class MythFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private lateinit var lit_myth: TextView
+    private lateinit var lit_tip: TextView
+    private lateinit var myths: TextView
+    private lateinit var tips: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,8 +41,20 @@ class MythFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_myth, container, false)
+
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        myths=view.findViewById((R.id.myths))
+        lit_myth=view.findViewById((R.id.lit_myth))
+        lit_myth.movementMethod= ScrollingMovementMethod()
+        tips=view.findViewById((R.id.tips))
+        lit_tip=view.findViewById((R.id.lit_tip))
+        lit_tip.movementMethod=ScrollingMovementMethod()
+
+
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of

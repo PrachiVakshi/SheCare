@@ -26,10 +26,12 @@ class ActionActivity : AppCompatActivity() {
         val fragmentStateAdapter = NavAdapter(supportFragmentManager,lifecycle)
         viewPager.adapter=fragmentStateAdapter
         viewPager.isUserInputEnabled=false
+        viewPager.currentItem=1
         bottomNavBar=findViewById(R.id.bottomNavigationView)
         year=intent.getStringExtra("Year")!!
         month=intent.getStringExtra("Month")!!
         day=intent.getStringExtra("Day")!!
+        bottomNavBar.menu.findItem(R.id.tracker).isChecked=true
         bottomNavBar.setOnItemSelectedListener {it->
             when(it.itemId)
             {
@@ -37,7 +39,7 @@ class ActionActivity : AppCompatActivity() {
                 R.id.tracker -> changeFragment(1)
                 R.id.myths -> changeFragment(2)
                 R.id.diary -> changeFragment(3)
-                else -> changeFragment(0)
+                else -> changeFragment(1)
             }
 
         }
